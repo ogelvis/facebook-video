@@ -1,25 +1,30 @@
-const axios = require("axios");
+require("dotenv").config();
 
-async function fetchVideo(url) {
-  if (!url) throw new Error("Video URL is required");
+const express = require("express");
+const cors = require("cors");
+const fetchVideo = require("./fetchVideo");
 
-  const options = {
-    method: "GET",
-    url: "https://facebook-videos-reels-downloader.p.rapidapi.com/get-video-info",
-    params: { url },
-    headers: {
-      "x-rapidapi-key": process.env.RAPID_API_KEY,
-      "x-rapidapi-host": "facebook-videos-reels-downloader.p.rapidapi.com"
-    }
-  };
+const app = express();
 
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+app.post("/api/fetch", async (req, res) => {
   try {
-    const response = await axios.request(options);
-    return response.data;
+    const { url } = req.body;
+    const data = await fetchVideo(url);
+    res.json(data);
   } catch (err) {
-    console.error("API ERROR:", err.response?.data || err.message);
-    throw new Error("Failed to fetch video info");
+    res.status(500).json({ error: err.message });
   }
-}
+});
 
-module.exports = fetchVideo;
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
