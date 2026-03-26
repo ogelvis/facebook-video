@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB VidPull by Novini Tech Concept</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --blue: #1877F2;
+  --blue-hover: #1560CC;
+  --blue-pale: #EBF2FE;
+  --white: #ffffff;
+  --bg: #F2F5FB;
+  --text: #0E1218;
+  --muted: #6B7280;
+  --light: #9CA3AF;
+  --border: #DDE3EE;
+  --error: #B91C1C;
+  --error-bg: #FEF2F2;
+  --warn: #92400E;
+  --warn-bg: #FFFBEB;
+  --success: #15803d;
+  --success-bg: #F0FDF4;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0 16px 72px;
+}
+
+.page { max-width: 660px; margin: 0 auto; }
+
+header { padding: 48px 0 32px; text-align: center; }
+
+.brand-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.brand-icon {
+  width: 46px; height: 46px;
+  background: var(--blue);
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-icon svg { width: 24px; height: 24px; fill: #fff; }
+
+.brand-name {
+  font-size: 27px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.brand-name span { color: var(--blue); }
+
+.powered {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--light);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+h1 {
+  font-size: clamp(24px, 4.5vw, 38px);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.8px;
+  color: var(--text);
+  margin-bottom: 11px;
+}
+
+h1 span { color: var(--blue); }
+
+.sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+  font-weight: 400;
+}
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  margin-bottom: 14px;
+}
+
+.setup-panel {
+  background: var(--white);
+  border: 1.5px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin-bottom: 14px;
+}
+
+.setup-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setup-title svg { width: 15px; height: 15px; fill: var(--blue); flex-shrink: 0; }
+
+.setup-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.55;
+}
+
+.setup-desc a { color: var(--blue); font-weight: 600; text-decoration: none; }
+
+.key-row { display: flex; gap: 8px; }
+
+.key-input {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: #F8FAFF;
+  color: var(--text);
+  min-width: 0;
+  transition: border-color 0.15s;
+}
+
+.key-input:focus { border-color: var(--blue); background: var(--white); }
+.key-input::placeholder { color: #B0BAC9; font-family: 'Outfit', sans-serif; }
+
+.save-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 18px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s;
+}
+
+.save-btn:hover { background: var(--blue-hover); }
+
+.key-msg {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 8px;
+  display: none;
+}
+
+.key-msg.ok { display: block; color: var(--success); }
+.key-msg.no { display: block; color: var(--error); }
+
+.field-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-lbl svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.input-row { display: flex; gap: 8px; }
+
+input[type="text"] {
+  flex: 1;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 12px 15px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: #F8FAFF;
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 0;
+}
+
+input[type="text"]:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(24,119,242,0.10);
+  background: var(--white);
+}
+
+input[type="text"]::placeholder { color: #B0BAC9; font-weight: 400; }
+
+.btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.14s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-blue:hover { background: var(--blue-hover); }
+.btn-blue:active { transform: scale(0.97); }
+.btn-blue:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.ghost-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+  cursor: pointer;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: opacity 0.14s;
+}
+
+.ghost-btn:hover { opacity: 0.65; }
+.ghost-btn svg { width: 13px; height: 13px; }
+
+.x-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 0;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.14s;
+}
+
+.x-btn.on { display: flex; }
+.x-btn:hover { color: var(--error); }
+.x-btn svg { width: 13px; height: 13px; }
+
+.alert {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+  margin-top: 14px;
+}
+
+.alert.on { display: flex; }
+.alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+.alert.info { background: var(--blue-pale); color: #1450A0; }
+.alert.bad  { background: var(--error-bg); color: var(--error); }
+.alert.warn { background: var(--warn-bg);  color: var(--warn);  }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spin {
+  width: 15px; height: 15px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.result-panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: none;
+}
+
+.result-panel.on { display: block; }
+
+.result-top {
+  background: var(--blue);
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.thumb-box {
+  width: 66px; height: 66px;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.18);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb-box svg { width: 26px; height: 26px; fill: rgba(255,255,255,0.75); }
+
+.vid-info { flex: 1; min-width: 0; }
+
+.vid-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.35;
+}
+
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.dl-section { padding: 20px 22px; }
+
+.dl-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 9px;
+}
+
+.dl-tile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: #F8FAFF;
+  text-decoration: none;
+  transition: border-color 0.14s, background 0.14s, transform 0.12s;
+}
+
+.dl-tile:hover {
+  border-color: var(--blue);
+  background: var(--blue-pale);
+  transform: translateY(-2px);
+}
+
+.dl-tile:active { transform: translateY(0); }
+
+.tile-icon {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.tile-icon svg { width: 17px; height: 17px; fill: white; }
+
+.tile-text { flex: 1; min-width: 0; }
+
+.tile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  white-space: nowrap;
+}
+
+.tile-desc {
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.tile-arrow svg { width: 13px; height: 13px; stroke: var(--blue); flex-shrink: 0; }
+
+.guide-panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 14px;
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.steps { display: flex; flex-direction: column; gap: 15px; }
+
+.step { display: flex; gap: 13px; align-items: flex-start; }
+
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--blue-pale);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-body b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.step-body p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.feats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.feat {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.feat-ico {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--blue-pale);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+}
+
+.feat-ico svg { width: 16px; height: 16px; fill: var(--blue); }
+
+.feat b { font-size: 13px; font-weight: 600; color: var(--text); display: block; margin-bottom: 3px; }
+.feat p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--light);
+  line-height: 1.85;
+  padding-top: 6px;
+}
+
+footer a { color: var(--blue); text-decoration: none; }
+footer strong { color: var(--muted); font-weight: 600; }
+
+@keyframes up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.pop { animation: up 0.25s ease forwards; }
+
+@media (max-width: 480px) {
+  .panel, .guide-panel, .setup-panel { padding: 18px; }
+  .input-row { flex-direction: column; }
+  .btn-blue { width: 100%; justify-content: center; }
+  .result-top { flex-direction: column; align-items: flex-start; }
+  .key-row { flex-direction: column; }
+  .save-btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="brand-row">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </div>
+    <div class="brand-name">FB <span>VidPull</span></div>
+  </div>
+  <div class="powered">Powered by Novini Tech Concept</div>
+  <h1>Pull Any Facebook Video<br><span>In Seconds</span></h1>
+  <p class="sub">Paste a public Facebook video link and get instant HD or SD download options. No account, no extension, no stress.</p>
+</header>
+
+<div class="setup-panel" id="setupPanel">
+  <div class="setup-title">
+    <svg viewBox="0 0 24 24"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01L12 1z"/></svg>
+    One time setup to activate downloads
+  </div>
+  <p class="setup-desc">
+    Get your free API key at <a href="https://rapidapi.com/search/facebook+video+downloader" target="_blank" rel="noopener">rapidapi.com</a>. Search for Facebook Reel and Video Downloader, subscribe to the free plan, then paste your key below. Your key is saved in this browser only.
+  </p>
+  <div class="key-row">
+    <input class="key-input" type="text" id="apiKeyInput" placeholder="Paste your RapidAPI key here" autocomplete="off" spellcheck="false" />
+    <button class="save-btn" onclick="saveKey()">Save Key</button>
+  </div>
+  <div class="key-msg" id="keyOk">API key saved. FB VidPull is ready to use.</div>
+  <div class="key-msg" id="keyNo">Please enter a valid API key before saving.</div>
+</div>
+
+<div class="panel">
+  <div class="field-lbl">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+    Facebook video link
+  </div>
+  <div class="input-row">
+    <input type="text" id="urlInput" placeholder="https://www.facebook.com/watch?v=..." autocomplete="off" spellcheck="false" />
+    <button class="btn btn-blue" id="fetchBtn" onclick="startFetch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+      Pull Video
+    </button>
+  </div>
+  <div class="actions-row">
+    <button class="ghost-btn" onclick="doPaste()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+      Paste link
+    </button>
+    <button class="x-btn" id="xBtn" onclick="clearAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Clear
+    </button>
+  </div>
+
+  <div class="alert info" id="aLoad">
+    <div class="spin"></div>
+    <span id="loadTxt">Connecting...</span>
+  </div>
+  <div class="alert bad" id="aErr">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <span id="errTxt">Something went wrong.</span>
+  </div>
+  <div class="alert warn" id="aWarn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span id="warnTxt"></span>
+  </div>
+</div>
+
+<div class="result-panel" id="resultPanel">
+  <div class="result-top">
+    <div class="thumb-box" id="thumbBox">
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </div>
+    <div class="vid-info">
+      <div class="vid-name" id="vidName">Facebook Video</div>
+      <div class="tag-row" id="tagRow"></div>
+    </div>
+  </div>
+  <div class="dl-section">
+    <div class="dl-lbl">Choose download quality</div>
+    <div class="dl-grid" id="dlGrid"></div>
+  </div>
+</div>
+
+<div class="guide-panel">
+  <div class="panel-title">How to download in 3 steps</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <b>Copy the video link from Facebook</b>
+        <p>Open the video, tap the three dot menu and choose Copy Link. You can also copy straight from your browser address bar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <b>Paste the link into FB VidPull</b>
+        <p>Tap Paste link or press Ctrl V. FB VidPull checks the link and fetches the video details right away.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <b>Pick your quality and save to your device</b>
+        <p>Choose HD for best picture or SD for a smaller file. One tap and the video saves directly to your device.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="feats">
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+    <b>Instant pull</b>
+    <p>Video links resolved and ready in seconds.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+    <b>HD quality</b>
+    <p>Get the highest resolution the video has.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <b>No sign up</b>
+    <p>No account needed. Paste and pull.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+    <b>Works on mobile</b>
+    <p>Fully built for phones, tablets and desktop.</p>
+  </div>
+</div>
+
+<footer>
+  <p>Only download videos you have the right to save. Respect creators and their work.</p>
+  <p><strong>FB VidPull</strong> is not affiliated with Meta or Facebook. For personal use only.</p>
+  <p style="margin-top:5px;">Built and maintained by <strong>Novini Tech Concept</strong></p>
+</footer>
+
+</div>
+<script>
+(function(){
+
+
+  const STORE_KEY  = 'nvt_fbvidpull_apikey';
+
+  const $ = id => document.getElementById(id);
+  let API_KEY = '';
+
+  function boot() {
+    const saved = localStorage.getItem(STORE_KEY) || '';
+    if (saved) {
+      API_KEY = saved;
+      $('apiKeyInput').value = saved;
+      showKeyMsg('ok');
+    }
+  }
+
+  function showKeyMsg(type) {
+    $('keyOk').className = 'key-msg' + (type === 'ok' ? ' ok' : '');
+    $('keyNo').className  = 'key-msg' + (type === 'no' ? ' no' : '');
+  }
+
+  function saveKey() {
+    const val = $('apiKeyInput').value.trim();
+    if (!val || val.length < 20) { showKeyMsg('no'); return; }
+    API_KEY = val;
+    localStorage.setItem(STORE_KEY, val);
+    showKeyMsg('ok');
+  }
+
+  function alertShow(type) {
+    ['aLoad','aErr','aWarn'].forEach(id => $(id).classList.remove('on'));
+    if (type) $(type).classList.add('on');
+  }
+
+  function setLoading(on) {
+    $('fetchBtn').disabled = on;
+    $('fetchBtn').innerHTML = on
+      ? '<div class="spin" style="border-color:rgba(255,255,255,0.4);border-top-color:transparent;width:14px;height:14px;"></div> Pulling...'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="15" height="15"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg> Pull Video';
+  }
+
+  function isFB(url) {
+    return /facebook\.com\/(watch|video|reel|share|permalink|story|photo)|fb\.watch/i.test(url);
+  }
+
+  async function doPaste() {
+    try {
+      const t = await navigator.clipboard.readText();
+      $('urlInput').value = t.trim();
+      $('xBtn').classList.add('on');
+      if (isFB(t.trim())) setTimeout(startFetch, 280);
+    } catch { $('urlInput').focus(); }
+  }
+
+  function clearAll() {
+    $('urlInput').value = '';
+    $('xBtn').classList.remove('on');
+    $('resultPanel').classList.remove('on');
+    alertShow(null);
+  }
+
+  $('urlInput').addEventListener('input', function() {
+    $('xBtn').classList.toggle('on', this.value.length > 0);
+  });
+
+  $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') startFetch(); });
+
+  $('urlInput').addEventListener('paste', () => {
+    setTimeout(() => {
+      if (isFB($('urlInput').value.trim())) setTimeout(startFetch, 300);
+    }, 80);
+  });
+
+async function callAPI(videoUrl) {
+  const res = await fetch("https://YOUR-BACKEND-URL.onrender.com/api/fetch", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ url: videoUrl })
+  });
+
+  if (res.status === 401 || res.status === 403) throw new Error('bad_key');
+  if (!res.ok) throw new Error('api_fail');
+  return res.json();
+}
+
+  function buildOptions(links) {
+    const grid = $('dlGrid');
+    grid.innerHTML = '';
+
+    const list = [];
+    if (links.hd)    list.push({ label: 'HD Quality', desc: 'Best resolution',   url: links.hd,    type: 'hd'    });
+    if (links.sd)    list.push({ label: 'SD Quality', desc: 'Smaller file size', url: links.sd,    type: 'sd'    });
+    if (links.audio) list.push({ label: 'Audio Only', desc: 'Sound only',        url: links.audio, type: 'audio' });
+
+    if (!list.length) {
+      grid.innerHTML = '<p style="font-size:13px;color:var(--muted);">No download links were found for this video.</p>';
+      return false;
+    }
+
+    const svgs = {
+      hd:    '<path d="M2 8h4v8H2zm0 4h4M8 8v8m0-5h5m0-3v8m4-8h3a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>',
+      sd:    '<text x="3" y="16" font-family="sans-serif" font-weight="700" font-size="10" fill="white">SD</text>',
+      audio: '<path d="M9 18V5l12-2v13" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="white" stroke-width="2" fill="none"/><circle cx="18" cy="16" r="3" stroke="white" stroke-width="2" fill="none"/>'
+    };
+
+    list.forEach(opt => {
+      const a = document.createElement('a');
+      a.className = 'dl-tile';
+      a.href = opt.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.innerHTML = `
+        <div class="tile-icon"><svg viewBox="0 0 24 24" width="17" height="17">${svgs[opt.type]}</svg></div>
+        <div class="tile-text">
+          <span class="tile-name">${opt.label}</span>
+          <span class="tile-desc">${opt.desc}</span>
+        </div>
+        <div class="tile-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>`;
+      grid.appendChild(a);
+    });
+    return true;
+  }
+
+  function showResult(data) {
+    $('vidName').textContent = data.title || 'Facebook Video';
+
+    const tags = $('tagRow');
+    tags.innerHTML = '';
+    if (data.hd || data.Download_HD)       tags.innerHTML += '<span class="tag">HD Ready</span>';
+    if (data.sd || data.Download_SD)       tags.innerHTML += '<span class="tag">SD Ready</span>';
+    if (data.audio || data.Download_Audio) tags.innerHTML += '<span class="tag">Audio Ready</span>';
+
+    if (data.thumbnail) {
+      $('thumbBox').innerHTML = `<img src="${data.thumbnail}" alt="" onerror="this.parentNode.innerHTML='<svg viewBox=\\'0 0 24 24\\'><polygon points=\\'5 3 19 12 5 21 5 3\\'/></svg>'" />`;
+    }
+
+    const links = {
+      hd:    data.hd    || data.Download_HD    || null,
+      sd:    data.sd    || data.Download_SD    || null,
+      audio: data.audio || data.Download_Audio || null
+    };
+
+    if (buildOptions(links)) {
+      $('resultPanel').classList.add('on', 'pop');
+    }
+  }
+
+  async function startFetch() {
+    const url = $('urlInput').value.trim();
+    $('resultPanel').classList.remove('on');
+    alertShow(null);
+
+    if (!url) {
+      $('errTxt').textContent = 'Please enter a Facebook video link first.';
+      alertShow('aErr'); return;
+    }
+
+    if (!isFB(url)) {
+      $('errTxt').textContent = 'That does not look like a Facebook video link. Make sure it starts with facebook.com or fb.watch.';
+      alertShow('aErr'); return;
+    }
+
+    if (!API_KEY) {
+      $('errTxt').textContent = 'Please save your RapidAPI key in the setup box above before pulling videos.';
+      alertShow('aErr');
+      $('apiKeyInput').focus();
+      return;
+    }
+
+    setLoading(true);
+    $('loadTxt').textContent = 'Connecting to video service...';
+    alertShow('aLoad');
+
+    try {
+      $('loadTxt').textContent = 'Extracting download links...';
+      const data = await callAPI(url);
+
+      setLoading(false);
+      alertShow(null);
+
+      const hasLinks = data.hd || data.sd || data.Download_HD || data.Download_SD || data.audio || data.Download_Audio;
+
+      if (hasLinks) {
+        showResult(data);
+      } else {
+        $('warnTxt').innerHTML = '<span><b>No download links found for this video.</b><br>This usually means the video is set to private or has been removed from Facebook. Only public videos can be pulled. Try a different link.</span>';
+        alertShow('aWarn');
+      }
+
+    } catch(e) {
+      setLoading(false);
+      alertShow(null);
+
+      if (e.message === 'bad_key') {
+        $('errTxt').textContent = 'Your API key was rejected. Please check that you copied the full key correctly and saved it again above.';
+      } else {
+        $('errTxt').textContent = 'Could not reach the video service. Check your internet connection and try again.';
+      }
+      alertShow('aErr');
+    }
+  }
+
+  window.startFetch = startFetch;
+  window.doPaste    = doPaste;
+  window.clearAll   = clearAll;
+  window.saveKey    = saveKey;
+
+  boot();
+
+})();
+</script>
+</body>
+</html>
