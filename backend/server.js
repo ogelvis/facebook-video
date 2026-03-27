@@ -2,7 +2,16 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const fbDownloader = require('@mrnima/facebook-downloader').default || require('@mrnima/facebook-downloader');
+const fb = require('@mrnima/facebook-downloader');
+
+console.log("fb exports:", fb);
+console.log("typeof fb:", typeof fb);
+console.log("typeof fb.default:", typeof fb.default);
+
+const fbDownloader = typeof fb === 'function' ? fb : 
+                     typeof fb.default === 'function' ? fb.default :
+                     typeof fb.fbDownloader === 'function' ? fb.fbDownloader :
+                     Object.values(fb).find(v => typeof v === 'function');
 
 const app = express();
 
