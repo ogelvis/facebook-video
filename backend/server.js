@@ -18,15 +18,13 @@ app.post("/api/fetch", async (req, res) => {
     const { url } = req.body;
 
     const response = await axios.get(
-      `https://www.y2mate.com/mates/analyzeV2/ajax`,
+      "https://facebook-videos-reels-downloader.p.rapidapi.com/get-video-info",
       {
-        params: {
-          url: url,
-          q_auto: 0,
-          ajax: 1,
-        },
+        params: { url },
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Content-Type": "application/json",
+          "x-rapidapi-host": "facebook-videos-reels-downloader.p.rapidapi.com",
+          "x-rapidapi-key": process.env.RAPIDAPI_KEY,
         },
       }
     );
@@ -42,3 +40,8 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+```
+
+Then add your key to `.env` file:
+```
+RAPIDAPI_KEY=4ef6d33dccmsh848c2bbd0370aebp158a80jsn766540bcec50
