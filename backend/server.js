@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const fbDownloader = require('@mrnima/facebook-downloader');
+const fbDownloader = require('@mrnima/facebook-downloader').default || require('@mrnima/facebook-downloader');
 
 const app = express();
 
