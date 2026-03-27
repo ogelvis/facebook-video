@@ -2,16 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const fb = require('@mrnima/facebook-downloader');
-
-console.log("fb exports:", fb);
-console.log("typeof fb:", typeof fb);
-console.log("typeof fb.default:", typeof fb.default);
-
-const fbDownloader = typeof fb === 'function' ? fb : 
-                     typeof fb.default === 'function' ? fb.default :
-                     typeof fb.fbDownloader === 'function' ? fb.fbDownloader :
-                     Object.values(fb).find(v => typeof v === 'function');
+const axios = require("axios");
 
 const app = express();
 
@@ -25,18 +16,22 @@ app.get("/", (req, res) => {
 app.post("/api/fetch", async (req, res) => {
   try {
     const { url } = req.body;
-    const result = await fbDownloader(url);
 
-    if (!result.success) {
-      return res.status(500).json({ error: "Failed to fetch video" });
-    }
+    const response = await axios.get(
+      `https://www.y2mate.com/mates/analyzeV2/ajax`,
+      {
+        params: {
+          url: url,
+          q_auto: 0,
+          ajax: 1,
+        },
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      }
+    );
 
-    res.json({
-      title: result.title,
-      thumbnail: result.thumbnail,
-      sd: result.download.sd,
-      hd: result.download.hd,
-    });
+    res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
