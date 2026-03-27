@@ -40,8 +40,3 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-```
-
-Then add your key to `.env` file:
-```
-RAPIDAPI_KEY=4ef6d33dccmsh848c2bbd0370aebp158a80jsn766540bcec50
